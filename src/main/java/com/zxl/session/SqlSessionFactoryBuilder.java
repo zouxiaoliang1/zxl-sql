@@ -1,8 +1,9 @@
 package com.zxl.session;
 
 import java.io.InputStream;
+import java.util.Properties;
 
-import com.zxl.xml.XMLConfigBuilder;
+import com.zxl.builder.xml.XMLConfigBuilder;
 
 /**
  * Created by zouxiaoliang on 2018/4/21.
@@ -10,7 +11,11 @@ import com.zxl.xml.XMLConfigBuilder;
 public class SqlSessionFactoryBuilder {
 
 	public SqlSessionFactory build(InputStream inputStream) {
-		XMLConfigBuilder parser = new XMLConfigBuilder(inputStream);
+		return this.build(inputStream, null, null);
+	}
+
+	public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
+		XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
 		Configuration configuration = parser.parse();
 		return this.build(configuration);
 	}

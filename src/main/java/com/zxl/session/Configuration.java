@@ -1,6 +1,5 @@
 package com.zxl.session;
 
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +12,6 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
  * Created by zouxiaoliang on 2018/4/21.
  */
 public class Configuration {
-	private static ClassLoader loader = ClassLoader.getSystemClassLoader();
 
 	private Properties properties;
 
@@ -24,31 +22,29 @@ public class Configuration {
 
 	}
 
-	public Configuration(String resource) {
-		evalDataSource(resource);
+	public Configuration(Properties properties) {
+		this.properties = properties;
+		evalDataSource();
 	}
 
 	/**
 	 * 从线程池获取连接，避免多线程问题，用双重检验锁
-	 * @param resource
 	 * @return
 	 */
-	private static void evalDataSource(String resource) {
+	private void evalDataSource() {
 		if (dataSource == null) {
 			synchronized (Configuration.class) {
 				if (dataSource == null) {
-					Properties properties = new Properties();
-					InputStream inputStream = loader.getResourceAsStream(resource);
 					try {
-						properties.load(inputStream);
 						dataSource = new ComboPooledDataSource("mysql");
-						dataSource.setDriverClass(properties.getProperty("driverClass"));
+						dataSource.setDriverClass(properties.getProperty("driver"));
 						dataSource.setUser(properties.getProperty("user"));
-						dataSource.setJdbcUrl(properties.getProperty("jdbcUrl"));
-						dataSource.setInitialPoolSize(new Integer(properties.getProperty("initialPoolSize")));
-						dataSource.setMaxPoolSize(new Integer(properties.getProperty("maxPoolSize")));
-						dataSource.setMinPoolSize(new Integer(properties.getProperty("minPoolSize")));
-						dataSource.setMaxIdleTime(new Integer(properties.getProperty("maxIdleTime")));
+						dataSource.setUser(properties.getProperty("password"));
+						dataSource.setJdbcUrl(properties.getProperty("url"));
+//						dataSource.setInitialPoolSize(new Integer(properties.getProperty("initialPoolSize")));
+//						dataSource.setMaxPoolSize(new Integer(properties.getProperty("maxPoolSize")));
+//						dataSource.setMinPoolSize(new Integer(properties.getProperty("minPoolSize")));
+//						dataSource.setMaxIdleTime(new Integer(properties.getProperty("maxIdleTime")));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -90,13 +86,5 @@ public class Configuration {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public Properties getProperties() {
-		return properties;
-	}
-
-	public void setProperties(Properties properties) {
-		this.properties = properties;
 	}
 }

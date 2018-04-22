@@ -15,8 +15,8 @@ public class DefaultSqlSession implements SqlSession {
 
 	private Configuration configuration;
 
-	public DefaultSqlSession (String resource) {
-		this.configuration = new Configuration(resource);
+	public DefaultSqlSession (Configuration configuration) {
+		this.configuration = configuration;
 		this.executor = new DefaultExecutor(configuration);
 	}
 

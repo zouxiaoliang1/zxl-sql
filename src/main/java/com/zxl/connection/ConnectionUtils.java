@@ -18,7 +18,7 @@ public final class ConnectionUtils {
 
 	static {
 		Properties properties = new Properties();
-		InputStream inputStream = ConnectionUtils.class.getResourceAsStream("/c3p0-config.properties");
+		InputStream inputStream = ConnectionUtils.class.getResourceAsStream("/config.properties");
 		try {
 			properties.load(inputStream);
 			dataSource = new ComboPooledDataSource("mysql");
